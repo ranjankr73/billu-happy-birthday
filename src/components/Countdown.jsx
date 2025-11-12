@@ -22,7 +22,7 @@ export default function Countdown({ releaseTime }) {
 
   // 🎵 setup background audio with fade control
   useEffect(() => {
-    const bg = new Audio("/src/assets/ambient.mp3");
+    const bg = new Audio("/ambient.mp3");
     bg.loop = true;
     bg.volume = 0;
     setAudio(bg);
