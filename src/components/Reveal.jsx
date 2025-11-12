@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { motion } from "framer-motion";
 // import dayjs from "dayjs";
-import photo1 from "../assets/photo1.jpg";
-import photo2 from "../assets/photo2.jpg";
-import photo3 from "../assets/photo3.jpg";
-import song from "../assets/song.mp3";
+import photo1 from "/photo1.jpg";
+import photo2 from "/photo2.jpg";
+import photo3 from "/photo3.jpg";
+import song from "/song.mp3";
 
 export default function Reveal() {
   const [text, setText] = useState("");
