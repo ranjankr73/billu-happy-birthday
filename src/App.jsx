@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
-import dayjs from "dayjs";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 import Countdown from "./components/Countdown";
 import Reveal from "./components/Reveal";
-
-const RELEASE_TIME = dayjs("2025-11-15T00:00:00");
+import dayjs from "dayjs";
 
 export default function App() {
-  const [isReleased, setIsReleased] = useState(false);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (dayjs().isAfter(RELEASE_TIME)) {
-        setIsReleased(true);
-        clearInterval(timer);
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // 🕛 Define the reveal time (update this to her birthday)
+  const releaseTime = dayjs("2025-11-15T00:00:00"); // yyyy-mm-ddThh:mm:ss
 
   return (
-    <div className="w-full h-screen bg-linear-to-b from-black via-purple-900 to-pink-900 text-white flex items-center justify-center">
-      {isReleased ? (
-        <Reveal />
-      ) : (
-        <Countdown releaseTime={RELEASE_TIME} />
-      )}
-    </div>
+    <Routes>
+      {/* Default page */}
+      <Route path="/" element={<Countdown releaseTime={releaseTime} />} />
+
+      {/* Reveal page */}
+      <Route path="/reveal" element={<Reveal />} />
+
+      {/* Optional fallback route */}
+      <Route
+        path="*"
+        element={
+          <div className="h-screen flex items-center justify-center text-2xl text-pink-200 bg-black">
+            Page not found 💔
+          </div>
+        }
+      />
+    </Routes>
   );
 }

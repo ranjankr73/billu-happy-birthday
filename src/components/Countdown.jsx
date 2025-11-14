@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // ✅ import this
 
 export default function Countdown({ releaseTime }) {
   const [remaining, setRemaining] = useState(releaseTime.diff(dayjs(), "second"));
@@ -9,9 +10,11 @@ export default function Countdown({ releaseTime }) {
   const [audio, setAudio] = useState(null);
   const [isReadyToPlay, setIsReadyToPlay] = useState(false);
 
+  const navigate = useNavigate(); // ✅ initialize navigation hook
+
   const nicknames = ["Billu", "Jaan", "Rani", "Billauti"];
 
-  // Countdown logic
+  // 🕰️ Countdown logic
   useEffect(() => {
     const interval = setInterval(() => {
       const diff = releaseTime.diff(dayjs(), "second");
@@ -20,7 +23,7 @@ export default function Countdown({ releaseTime }) {
     return () => clearInterval(interval);
   }, [releaseTime]);
 
-  // Music setup
+  // 🎵 Setup background music
   useEffect(() => {
     const bg = new Audio("/ambient.mp3");
     bg.loop = true;
@@ -30,6 +33,18 @@ export default function Countdown({ releaseTime }) {
     return () => bg.pause();
   }, []);
 
+  // 🎬 When countdown finishes → navigate to reveal
+  useEffect(() => {
+    if (remaining === 0) {
+      // wait for 2 seconds to let "It's Time ❤️" animation play
+      const timer = setTimeout(() => {
+        navigate("/reveal");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [remaining, navigate]);
+
+  // 🎧 Fade-in audio
   const fadeIn = (bg) => {
     let vol = 0;
     const fade = setInterval(() => {
@@ -53,6 +68,7 @@ export default function Countdown({ releaseTime }) {
     }
   };
 
+  // 🧭 Countdown visuals
   const TimeBlock = ({ value, label }) => (
     <div className="flex flex-col items-center w-20 sm:w-24 md:w-28 relative mx-2">
       <span className="block text-5xl sm:text-7xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-red-100 to-red-500 drop-shadow-[0_0_12px_rgba(255,0,0,0.6)]">
@@ -81,7 +97,7 @@ export default function Countdown({ releaseTime }) {
     );
   };
 
-  // Aurora background
+  // 🎇 Animated background
   const BackgroundAurora = () => (
     <motion.div
       className="absolute inset-0 bg-gradient-to-br from-[#1a0018] via-[#420016] to-[#240010]"
@@ -97,7 +113,7 @@ export default function Countdown({ releaseTime }) {
     ></motion.div>
   );
 
-  // Main render
+  // 🌙 Render countdown page
   return (
     <div
       className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden text-center text-red-100 font-serif"
@@ -106,7 +122,7 @@ export default function Countdown({ releaseTime }) {
     >
       <BackgroundAurora />
 
-      {/* Stars */}
+      {/* ✨ Stars */}
       <div className="absolute inset-0 z-10 overflow-hidden opacity-60">
         {Array.from({ length: 80 }).map((_, i) => (
           <span
@@ -125,7 +141,7 @@ export default function Countdown({ releaseTime }) {
         ))}
       </div>
 
-      {/* Central heart */}
+      {/* ❤️ Central heart */}
       <motion.div
         className="absolute text-[14rem] md:text-[22rem] z-30 text-[#B00000] drop-shadow-[0_0_50px_rgba(255,0,0,0.9)]"
         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.45, 0.3] }}
@@ -134,54 +150,56 @@ export default function Countdown({ releaseTime }) {
         ❤️
       </motion.div>
 
+      {/* Floating hearts and names */}
       <div className="absolute inset-0 z-[60] pointer-events-none">
-  {Array.from({ length: 25 }).map((_, i) => (
-    <motion.span
-      key={`heart-${i}`}
-      className="absolute text-[#ff4d6d] drop-shadow-[0_0_10px_rgba(255,100,120,0.8)]"
-      initial={{ x: `${Math.random() * 100}vw`, y: "110vh", opacity: 0.3 }}
-      animate={{
-        x: `${Math.random() * 100}vw`,
-        y: "-120vh",
-        rotate: [0, 15, -10, 20, 0],
-        opacity: [0.3, 1, 0.3],
-      }}
-      transition={{
-        duration: 18 + Math.random() * 10,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: Math.random() * 5,
-      }}
-      style={{ fontSize: `${Math.random() * 18 + 12}px`, willChange: "transform,opacity" }}
-    >
-      ❤️
-    </motion.span>
-  ))}
+        {Array.from({ length: 25 }).map((_, i) => (
+          <motion.span
+            key={`heart-${i}`}
+            className="absolute text-[#ff4d6d] drop-shadow-[0_0_10px_rgba(255,100,120,0.8)]"
+            initial={{ x: `${Math.random() * 100}vw`, y: "110vh", opacity: 0.3 }}
+            animate={{
+              x: `${Math.random() * 100}vw`,
+              y: "-120vh",
+              rotate: [0, 15, -10, 20, 0],
+              opacity: [0.3, 1, 0.3],
+            }}
+            transition={{
+              duration: 18 + Math.random() * 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 5,
+            }}
+            style={{ fontSize: `${Math.random() * 18 + 12}px`, willChange: "transform,opacity" }}
+          >
+            ❤️
+          </motion.span>
+        ))}
 
-  {Array.from({ length: 12 }).map((_, i) => (
-    <motion.span
-      key={`name-${i}`}
-      className="absolute text-pink-200 font-serif drop-shadow-[0_0_8px_rgba(255,150,200,0.9)]"
-      initial={{ x: `${Math.random() * 100}vw`, y: "100vh", opacity: 0.4 }}
-      animate={{
-        x: `${Math.random() * 100}vw`,
-        y: "-120vh",
-        rotate: [0, 10, -10, 15, 0],
-        opacity: [0.4, 0.9, 0.4],
-      }}
-      transition={{
-        duration: 25 + Math.random() * 8,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: Math.random() * 6,
-      }}
-      style={{ fontSize: `${Math.random() * 22 + 10}px`, willChange: "transform,opacity" }}
-    >
-      {nicknames[Math.floor(Math.random() * nicknames.length)]}
-    </motion.span>
-  ))}
-</div>
+        {Array.from({ length: 12 }).map((_, i) => (
+          <motion.span
+            key={`name-${i}`}
+            className="absolute text-pink-200 font-serif drop-shadow-[0_0_8px_rgba(255,150,200,0.9)]"
+            initial={{ x: `${Math.random() * 100}vw`, y: "100vh", opacity: 0.4 }}
+            animate={{
+              x: `${Math.random() * 100}vw`,
+              y: "-120vh",
+              rotate: [0, 10, -10, 15, 0],
+              opacity: [0.4, 0.9, 0.4],
+            }}
+            transition={{
+              duration: 25 + Math.random() * 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 6,
+            }}
+            style={{ fontSize: `${Math.random() * 22 + 10}px`, willChange: "transform,opacity" }}
+          >
+            {nicknames[Math.floor(Math.random() * nicknames.length)]}
+          </motion.span>
+        ))}
+      </div>
 
+      {/* Main content */}
       <motion.div
         className="relative z-40 flex flex-col items-center p-6 sm:p-8 bg-white/10 rounded-3xl border border-red-200/10 shadow-[0_0_40px_rgba(255,0,0,0.15)]"
         initial={{ opacity: 0, scale: 0.9 }}
@@ -211,6 +229,7 @@ export default function Countdown({ releaseTime }) {
         </p>
       </motion.div>
 
+      {/* Hint */}
       {showHint && (
         <motion.div
           className="absolute bottom-8 left-0 right-0 text-center text-red-200 text-sm italic tracking-widest z-50"
