@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 
 export default function App() {
   // 🕛 Define the reveal time (update this to her birthday)
-  const releaseTime = dayjs("2025-11-14T00:00:00"); // yyyy-mm-ddThh:mm:ss
+  const releaseTime = dayjs("2025-11-15T00:00:00"); // yyyy-mm-ddThh:mm:ss
 
   return (
     <Routes>
